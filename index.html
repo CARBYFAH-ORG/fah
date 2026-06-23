@@ -139,6 +139,23 @@
   .pill.green{background:var(--green-soft);color:var(--green-text)}
   .pill.slate{background:#e2e8f0;color:#475569}
 
+  /* SELECT CON BUSCADOR (estética TailAdmin, sin librerías) */
+  .ss{position:relative}
+  .ss-btn{width:100%;background:var(--soft);border:1px solid var(--border);border-radius:9px;padding:10px 34px 10px 12px;font-size:.92rem;color:var(--text);font-family:inherit;text-align:left;position:relative;min-height:40px}
+  .ss-btn:focus,.ss.open .ss-btn{outline:none;border-color:var(--primary);box-shadow:0 0 0 3px var(--primary-soft);background:#fff}
+  .ss-btn.ph{color:var(--text-soft)}
+  .ss-btn::after{content:'';position:absolute;right:13px;top:50%;width:8px;height:8px;border-right:2px solid var(--text-soft);border-bottom:2px solid var(--text-soft);transform:translateY(-70%) rotate(45deg)}
+  .ss-pop{position:absolute;z-index:5;left:0;right:0;top:calc(100% + 4px);background:#fff;border:1px solid var(--border);border-radius:11px;box-shadow:var(--shadow-md);padding:8px;display:none;max-height:280px;overflow:hidden;flex-direction:column}
+  .ss.open .ss-pop{display:flex}
+  .ss-search{width:100%;border:1px solid var(--border);border-radius:8px;padding:9px 11px;font-size:.88rem;font-family:inherit;margin-bottom:6px;flex:none}
+  .ss-search:focus{outline:none;border-color:var(--primary);box-shadow:0 0 0 3px var(--primary-soft)}
+  .ss-list{overflow-y:auto;flex:1}
+  .ss-opt{padding:9px 11px;border-radius:7px;font-size:.9rem;cursor:pointer;display:flex;align-items:center;gap:8px}
+  .ss-opt small{color:var(--text-soft);font-family:'JetBrains Mono',monospace;font-size:.78rem}
+  .ss-opt:hover,.ss-opt.hi{background:var(--primary-soft);color:var(--primary)}
+  .ss-opt.sel{font-weight:600}
+  .ss-empty{padding:14px;text-align:center;color:var(--text-soft);font-size:.84rem}
+
   /* MODAL */
   .overlay{position:fixed;inset:0;background:rgba(28,36,52,.55);display:none;align-items:flex-start;justify-content:center;padding:40px 16px;z-index:60;overflow-y:auto}
   .overlay.show{display:flex}
@@ -233,6 +250,7 @@
       <a data-view="estructura"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="3" width="6" height="5" rx="1"/><rect x="3" y="16" width="6" height="5" rx="1"/><rect x="15" y="16" width="6" height="5" rx="1"/><path d="M12 8v4M6 16v-2h12v2"/></svg>Estructura</a>
       <div class="grp only-admin">Administración</div>
       <a data-view="unidades" class="only-admin"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 21h18M5 21V7l8-4v18M19 21V11l-6-4"/></svg>Unidades</a>
+      <a data-view="cargos" class="only-admin"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>Cargos</a>
       <a data-view="usuarios" class="only-admin"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="8" r="3.5"/><path d="M3 20a6 6 0 0 1 12 0"/><path d="M16 5.5a3 3 0 0 1 0 5.5M21 20a6 6 0 0 0-5-5.9"/></svg>Usuarios</a>
       <a data-view="auditoria" class="only-admin"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 8v4l3 2"/><circle cx="12" cy="12" r="9"/></svg>Auditoría</a>
     </nav>
@@ -278,6 +296,19 @@
         <div class="tbl-wrap" id="tbl-unidades"></div>
       </section>
 
+      <!-- CARGOS (admin) -->
+      <section class="view only-admin" id="v-cargos">
+        <div class="page-title">Cargos por unidad</div>
+        <div class="page-sub">Define los cargos de cada unidad. Al asignar una persona a esa unidad, se le ofrecerán estos cargos.</div>
+        <div class="panel">
+          <div class="panel-h"><h3>Unidad</h3></div>
+          <div class="panel-b">
+            <div class="field" style="max-width:420px;margin-bottom:0"><label>Selecciona una unidad</label><div id="cg-unidad"></div></div>
+          </div>
+        </div>
+        <div id="cg-cont"></div>
+      </section>
+
       <!-- USUARIOS (admin) -->
       <section class="view only-admin" id="v-usuarios">
         <div class="page-title">Usuarios</div>
@@ -306,7 +337,7 @@
       <div class="field"><label>Código *</label><input id="u-codigo" autocomplete="off" placeholder="Ej. 1.8.2"><div class="hint">El último segmento indica la función (1=personal, 2=información…).</div></div>
       <div class="field"><label>Nombre *</label><input id="u-nombre" autocomplete="off" placeholder="Ej. A-2 HCM"></div>
       <div class="field"><label>Tipo de unidad</label><select id="u-tipo"></select></div>
-      <div class="field"><label>Código del padre</label><select id="u-padre"></select></div>
+      <div class="field"><label>Código del padre</label><div id="u-padre"></div></div>
       <div class="field full"><label>Función</label><select id="u-funcion"></select></div>
     </div></div>
     <div class="modal-f"><button class="btn" onclick="cerrar('ov-unidad')">Cancelar</button><button class="btn btn-primary" id="uni-save">Guardar</button></div>
@@ -321,7 +352,7 @@
       <div class="field"><label>Usuario *</label><input id="us-user" autocomplete="off"></div>
       <div class="field"><label>Nombre para mostrar</label><input id="us-nombre" autocomplete="off"></div>
       <div class="field"><label>Contraseña *</label><input id="us-pass" type="text" autocomplete="off"></div>
-      <div class="field"><label>Unidad (código)</label><select id="us-unidad"></select></div>
+      <div class="field"><label>Unidad (código)</label><div id="us-unidad"></div></div>
       <div class="field"><label>Alcance</label><select id="us-alcance">
         <option value="rama">Rama (su unidad hacia abajo)</option>
         <option value="funcion">Función (toda su función en la FAH)</option>
@@ -362,7 +393,7 @@
 
 <script>
 /* ════════ CONFIGURACIÓN ════════ */
-const API_URL = "https://script.google.com/macros/s/AKfycbxBrUZqwqTnf0ked76Nj9wSExeXO3T7LHTHSVm4hXyitqDxuizYGvo5bA0kzNyuAThrnw/exec";
+const API_URL = "https://script.google.com/macros/s/AKfycbxcBAN2rmto6eyUQK-Ki5ixTBnGBpCsNIlguSGi7Sjm9ckz_53udLNCTdgoeXgnK97n7w/exec";
 /* ════════════════════════════════ */
 
 const TIPOS=['Fuerza','Departamento','Base Aerea / Centro de Estudio','Seccion','Subseccion'];
@@ -434,7 +465,7 @@ function mostrarApp(){
 }
 
 /* NAV */
-const titulos={inicio:'Panel',estructura:'Estructura',unidades:'Unidades',usuarios:'Usuarios',auditoria:'Auditoría'};
+const titulos={inicio:'Panel',estructura:'Estructura',unidades:'Unidades',cargos:'Cargos',usuarios:'Usuarios',auditoria:'Auditoría'};
 function irA(v){
   document.querySelectorAll('.nav a[data-view]').forEach(x=>x.classList.remove('active'));
   const link=document.querySelector('.nav a[data-view="'+v+'"]'); if(link)link.classList.add('active');
@@ -446,6 +477,7 @@ function irA(v){
   if(v==='inicio')pintarInicio();
   if(v==='estructura')pintarArbol();
   if(v==='unidades')pintarUnidades();
+  if(v==='cargos')iniciarCargos();
   if(v==='usuarios')cargarUsuarios();
   if(v==='auditoria')cargarAuditoria();
 }
@@ -511,13 +543,14 @@ function llenarSelectsUnidad(){
   document.getElementById('u-tipo').innerHTML='<option value="">—</option>'+TIPOS.map(t=>`<option>${esc(t)}</option>`).join('');
   document.getElementById('u-funcion').innerHTML=FUNCIONES.map(f=>`<option value="${f[0]}">${esc(f[1])}</option>`).join('');
   const arr=UNIS.slice().sort((a,b)=>a.codigo.localeCompare(b.codigo,undefined,{numeric:true}));
-  document.getElementById('u-padre').innerHTML='<option value="">(ninguno · raíz)</option>'+arr.map(u=>`<option value="${esc(u.codigo)}">${esc(u.codigo)} · ${esc(u.nombre)}</option>`).join('');
+  const ops=[{value:'',label:'(ninguno · raíz)'}].concat(arr.map(u=>({value:u.codigo,label:u.nombre,sub:u.codigo})));
+  ssInit('u-padre',ops,'','(ninguno · raíz)');
 }
 let uniEdit=null;
-function abrirNuevaUnidad(){uniEdit=null;document.getElementById('uni-title').textContent='Nueva unidad';llenarSelectsUnidad();['u-codigo','u-nombre'].forEach(i=>document.getElementById(i).value='');document.getElementById('u-codigo').disabled=false;document.getElementById('u-tipo').selectedIndex=0;document.getElementById('u-padre').selectedIndex=0;document.getElementById('u-funcion').selectedIndex=0;abrir('ov-unidad');}
-function abrirEditarUnidad(cod){const u=UNIS.find(x=>x.codigo===cod);if(!u)return;uniEdit=cod;document.getElementById('uni-title').textContent='Editar unidad';llenarSelectsUnidad();document.getElementById('u-codigo').value=u.codigo;document.getElementById('u-codigo').disabled=true;document.getElementById('u-nombre').value=u.nombre;document.getElementById('u-tipo').value=u.tipo||'';document.getElementById('u-padre').value=u.padre||'';document.getElementById('u-funcion').value=u.funcion||'comando';abrir('ov-unidad');}
+function abrirNuevaUnidad(){uniEdit=null;document.getElementById('uni-title').textContent='Nueva unidad';llenarSelectsUnidad();['u-codigo','u-nombre'].forEach(i=>document.getElementById(i).value='');document.getElementById('u-codigo').disabled=false;document.getElementById('u-tipo').selectedIndex=0;ssSet('u-padre','');document.getElementById('u-funcion').selectedIndex=0;abrir('ov-unidad');}
+function abrirEditarUnidad(cod){const u=UNIS.find(x=>x.codigo===cod);if(!u)return;uniEdit=cod;document.getElementById('uni-title').textContent='Editar unidad';llenarSelectsUnidad();document.getElementById('u-codigo').value=u.codigo;document.getElementById('u-codigo').disabled=true;document.getElementById('u-nombre').value=u.nombre;document.getElementById('u-tipo').value=u.tipo||'';ssSet('u-padre',u.padre||'');document.getElementById('u-funcion').value=u.funcion||'comando';abrir('ov-unidad');}
 document.getElementById('uni-save').addEventListener('click',async function(){
-  const d={codigo:document.getElementById('u-codigo').value.trim(),nombre:document.getElementById('u-nombre').value.trim(),tipo:document.getElementById('u-tipo').value,padre:document.getElementById('u-padre').value,funcion:document.getElementById('u-funcion').value};
+  const d={codigo:document.getElementById('u-codigo').value.trim(),nombre:document.getElementById('u-nombre').value.trim(),tipo:document.getElementById('u-tipo').value,padre:ssVal('u-padre'),funcion:document.getElementById('u-funcion').value};
   if(!d.codigo||!d.nombre){toast('Código y nombre son obligatorios.','err');return;}
   this.disabled=true;
   try{const r=await api(Object.assign({action:uniEdit?'unidad_editar':'unidad_crear',token:S.token},d),'POST');if(!r.ok)throw new Error(r.error);
@@ -548,13 +581,14 @@ async function cargarUsuarios(){
 }
 function llenarSelectUnidadUsuario(sel){
   const arr=UNIS.slice().sort((a,b)=>a.codigo.localeCompare(b.codigo,undefined,{numeric:true}));
-  document.getElementById('us-unidad').innerHTML=arr.map(u=>`<option value="${esc(u.codigo)}" ${sel===u.codigo?'selected':''}>${esc(u.codigo)} · ${esc(u.nombre)}</option>`).join('');
+  const ops=arr.map(u=>({value:u.codigo,label:u.nombre,sub:u.codigo}));
+  ssInit('us-unidad',ops,sel||'','Seleccionar unidad…');
 }
 let userEdit=null;
 function abrirNuevoUsuario(){userEdit=null;document.getElementById('user-title').textContent='Nuevo usuario';['us-user','us-nombre','us-pass'].forEach(i=>document.getElementById(i).value='');document.getElementById('us-user').disabled=false;llenarSelectUnidadUsuario('');document.getElementById('us-alcance').value='rama';document.getElementById('us-rol').value='consulta';abrir('ov-user');}
 function abrirEditarUsuario(usuario){const u=(window._USERS||[]).find(x=>x.usuario===usuario);if(!u)return;userEdit=usuario;document.getElementById('user-title').textContent='Editar usuario';document.getElementById('us-user').value=u.usuario;document.getElementById('us-user').disabled=true;document.getElementById('us-nombre').value=u.nombre||'';document.getElementById('us-pass').value='';document.getElementById('us-pass').placeholder='(dejar vacío para no cambiar)';llenarSelectUnidadUsuario(u.codigoUnidad);document.getElementById('us-alcance').value=u.alcance;document.getElementById('us-rol').value=u.rol;abrir('ov-user');}
 document.getElementById('user-save').addEventListener('click',async function(){
-  const d={usuario:document.getElementById('us-user').value.trim(),nombre:document.getElementById('us-nombre').value.trim(),pass:document.getElementById('us-pass').value,codigoUnidad:document.getElementById('us-unidad').value,alcance:document.getElementById('us-alcance').value,rol:document.getElementById('us-rol').value};
+  const d={usuario:document.getElementById('us-user').value.trim(),nombre:document.getElementById('us-nombre').value.trim(),pass:document.getElementById('us-pass').value,codigoUnidad:ssVal('us-unidad'),alcance:document.getElementById('us-alcance').value,rol:document.getElementById('us-rol').value};
   if(!d.usuario){toast('El usuario es obligatorio.','err');return;}
   if(!userEdit&&!d.pass){toast('La contraseña es obligatoria.','err');return;}
   this.disabled=true;
@@ -572,6 +606,44 @@ document.getElementById('pass-save').addEventListener('click',async function(){
   catch(e){toast(e.message,'err');}finally{this.disabled=false;}
 });
 
+/* CARGOS (admin) */
+let cgUnidad='';
+function iniciarCargos(){
+  const arr=UNIS.slice().sort((a,b)=>a.codigo.localeCompare(b.codigo,undefined,{numeric:true}));
+  const ops=arr.map(u=>({value:u.codigo,label:u.nombre,sub:u.codigo}));
+  ssInit('cg-unidad',ops,cgUnidad,'Seleccionar unidad…');
+  ssOnChange('cg-unidad',v=>{cgUnidad=v;cargarCargos();});
+  if(cgUnidad)cargarCargos(); else document.getElementById('cg-cont').innerHTML='<div class="empty">Selecciona una unidad para ver y agregar sus cargos.</div>';
+}
+async function cargarCargos(){
+  if(!cgUnidad)return;
+  const u=UNIS.find(x=>x.codigo===cgUnidad);
+  try{
+    const res=await api({action:'cargos',token:S.token,codigoUnidad:cgUnidad});
+    const cargos=res.cargos||[];
+    document.getElementById('cg-cont').innerHTML=`<div class="panel"><div class="panel-h"><h3>Cargos de ${esc(u?u.nombre:cgUnidad)} <span class="mono" style="color:var(--text-dim);font-weight:400">${esc(cgUnidad)}</span></h3></div><div class="panel-b">
+      <div class="toolbar" style="margin-bottom:16px"><input id="cg-nuevo" placeholder="Nombre del cargo…" style="flex:1;background:var(--soft);border:1px solid var(--border);border-radius:9px;padding:10px 12px;font-size:.92rem;font-family:inherit"><input id="cg-orden" type="number" min="1" placeholder="Orden" style="width:90px;background:var(--soft);border:1px solid var(--border);border-radius:9px;padding:10px 12px;font-size:.92rem;font-family:inherit"><button class="btn btn-primary" onclick="crearCargo()">+ Agregar</button></div>
+      ${cargos.length?`<div class="tbl-wrap" style="box-shadow:none;border-color:var(--border)"><table><tbody>${cargos.map(c=>`<tr><td style="width:60px"><span class="mono" style="color:var(--text-dim)">${c.orden||'—'}</span></td><td><b>${esc(c.cargo)}</b></td><td style="text-align:right"><button class="ic-btn danger" onclick="borrarCargo('${esc(c.cargo)}')">✕</button></td></tr>`).join('')}</tbody></table></div>`:'<div class="empty">Esta unidad aún no tiene cargos. Agrega el primero arriba.</div>'}
+    </div></div>`;
+    document.getElementById('cg-nuevo').addEventListener('keydown',e=>{if(e.key==='Enter')crearCargo();});
+  }catch(e){toast(e.message,'err');}
+}
+async function crearCargo(){
+  const cargo=document.getElementById('cg-nuevo').value.trim();
+  const orden=parseInt(document.getElementById('cg-orden').value,10)||0;
+  if(!cargo){toast('Escribe el nombre del cargo.','err');return;}
+  try{const r=await api({action:'cargo_crear',token:S.token,codigoUnidad:cgUnidad,cargo,orden},'POST');if(!r.ok)throw new Error(r.error);
+    toast('Cargo agregado.','ok');cargarCargos();
+  }catch(e){toast(e.message,'err');}
+}
+async function borrarCargo(cargo){
+  const ok=await confirmar({titulo:'Borrar cargo',msg:'¿Borrar el cargo "'+cargo+'" de esta unidad?',ok:'Sí, borrar',danger:true});
+  if(!ok)return;
+  try{const r=await api({action:'cargo_borrar',token:S.token,codigoUnidad:cgUnidad,cargo},'POST');if(!r.ok)throw new Error(r.error);
+    toast('Cargo borrado.','ok');cargarCargos();
+  }catch(e){toast(e.message,'err');}
+}
+
 /* AUDITORÍA */
 async function cargarAuditoria(){
   try{const res=await api({action:'auditoria',token:S.token});const a=res.auditoria||[];
@@ -579,7 +651,56 @@ async function cargarAuditoria(){
   }catch(e){toast(e.message,'err');}
 }
 
-/* MODALES */
+/* ── SELECT CON BUSCADOR (componente reutilizable) ── */
+const SS={};
+function ssInit(id, opciones, valor, placeholder){
+  // opciones: [{value, label, sub}]
+  const host=document.getElementById(id); if(!host)return;
+  SS[id]={opciones:opciones||[],valor:valor||'',placeholder:placeholder||'Seleccionar…',hi:-1};
+  host.classList.add('ss');
+  host.innerHTML=`<button type="button" class="ss-btn" id="${id}-btn"></button>
+    <div class="ss-pop"><input class="ss-search" id="${id}-q" placeholder="Buscar…" autocomplete="off"><div class="ss-list" id="${id}-list"></div></div>`;
+  const btn=host.querySelector('.ss-btn'), q=host.querySelector('.ss-search');
+  btn.addEventListener('click',e=>{e.stopPropagation();ssToggle(id);});
+  q.addEventListener('input',()=>ssRender(id));
+  q.addEventListener('keydown',e=>ssKey(id,e));
+  ssPaint(id);
+}
+function ssPaint(id){
+  const s=SS[id], btn=document.getElementById(id+'-btn');
+  const sel=s.opciones.find(o=>o.value===s.valor);
+  if(sel){btn.classList.remove('ph');btn.innerHTML=esc(sel.label)+(sel.sub?` <small style="color:var(--text-soft);font-family:'JetBrains Mono',monospace;margin-left:auto">${esc(sel.sub)}</small>`:'');btn.style.display='flex';btn.style.alignItems='center';}
+  else{btn.classList.add('ph');btn.textContent=s.placeholder;}
+}
+function ssToggle(id,forzar){
+  document.querySelectorAll('.ss.open').forEach(h=>{if(h.id!==id)h.classList.remove('open');});
+  const host=document.getElementById(id); const abrir=forzar!==undefined?forzar:!host.classList.contains('open');
+  host.classList.toggle('open',abrir);
+  if(abrir){const q=document.getElementById(id+'-q');q.value='';ssRender(id);setTimeout(()=>q.focus(),30);}
+}
+function ssRender(id){
+  const s=SS[id], q=(document.getElementById(id+'-q').value||'').toLowerCase().trim();
+  const list=document.getElementById(id+'-list');
+  const fil=s.opciones.filter(o=>!q||(o.label+' '+(o.sub||'')).toLowerCase().indexOf(q)!==-1);
+  s._fil=fil; s.hi=fil.length?0:-1;
+  list.innerHTML=fil.length?fil.map((o,i)=>`<div class="ss-opt ${o.value===s.valor?'sel':''} ${i===s.hi?'hi':''}" data-i="${i}">${esc(o.label)}${o.sub?`<small style="margin-left:auto">${esc(o.sub)}</small>`:''}</div>`).join(''):'<div class="ss-empty">Sin coincidencias</div>';
+  list.querySelectorAll('.ss-opt').forEach(el=>el.addEventListener('click',()=>ssPick(id,fil[+el.dataset.i].value)));
+}
+function ssKey(id,e){
+  const s=SS[id], fil=s._fil||[];
+  if(e.key==='ArrowDown'){e.preventDefault();s.hi=Math.min(fil.length-1,s.hi+1);ssHi(id);}
+  else if(e.key==='ArrowUp'){e.preventDefault();s.hi=Math.max(0,s.hi-1);ssHi(id);}
+  else if(e.key==='Enter'){e.preventDefault();if(fil[s.hi])ssPick(id,fil[s.hi].value);}
+  else if(e.key==='Escape'){ssToggle(id,false);}
+}
+function ssHi(id){const list=document.getElementById(id+'-list');list.querySelectorAll('.ss-opt').forEach((el,i)=>el.classList.toggle('hi',i===SS[id].hi));const hi=list.querySelector('.ss-opt.hi');if(hi)hi.scrollIntoView({block:'nearest'});}
+function ssPick(id,val){SS[id].valor=val;ssPaint(id);ssToggle(id,false);const cb=SS[id].onChange;if(cb)cb(val);}
+function ssVal(id){return SS[id]?SS[id].valor:'';}
+function ssSet(id,val){if(SS[id]){SS[id].valor=val||'';ssPaint(id);}}
+function ssOnChange(id,cb){if(SS[id])SS[id].onChange=cb;}
+document.addEventListener('click',()=>document.querySelectorAll('.ss.open').forEach(h=>h.classList.remove('open')));
+
+
 const ICO_INFO='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 8h.01M11 12h1v4h1"/></svg>';
 const ICO_DANGER='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.3 4.3 2.6 18a2 2 0 0 0 1.7 3h15.4a2 2 0 0 0 1.7-3L13.7 4.3a2 2 0 0 0-3.4 0z"/><path d="M12 9v4M12 17h.01"/></svg>';
 function confirmar(opt){
