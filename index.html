@@ -542,7 +542,13 @@ function pintarFA1(){
   ];
   cont.innerHTML = modulos.map(m => `
     <div class="stat" style="cursor:pointer" onclick="window.location.href='${m.ruta}'">
-      <div style="font-size:2rem;margin-bottom:8px;color:var(--primary)">📋</div>
+      <div style="margin-bottom:8px;color:var(--primary);display:flex;justify-content:center;align-items:center;height:48px">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="32" height="32">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6z"/>
+          <path d="M14 2v6h6"/>
+          <path d="M8 12h8M8 16h6"/>
+        </svg>
+      </div>
       <div class="n" style="font-size:1.3rem">${m.nombre}</div>
       <div class="l">${m.desc}</div>
     </div>
