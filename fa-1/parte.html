@@ -168,6 +168,12 @@
   .backdrop{position:fixed;inset:0;background:rgba(28,36,52,.5);z-index:35;display:none}
   .backdrop.show{display:block}
 
+  /* catalogos */
+  .cat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:18px}
+  .cat-item{display:flex;align-items:center;gap:10px;padding:8px 12px;border:1px solid var(--border);border-radius:9px;margin-bottom:6px;font-size:.9rem;flex-wrap:wrap}
+  .cat-item span{flex:1;min-width:80px;overflow-wrap:break-word}
+  .cat-list{max-height:300px;overflow-y:auto}
+
   @media(min-width:881px){
     .backdrop{display:none!important}
     body.sb-collapsed .sidebar{width:76px}
@@ -219,6 +225,13 @@
       <div class="grp">Personal</div>
       <a data-view="parte" class="active"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/></svg>Generar parte</a>
       <a data-view="personal"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="8" r="3.5"/><path d="M3 20a6 6 0 0 1 12 0"/><path d="M16 5.5a3 3 0 0 1 0 5.5M21 20a6 6 0 0 0-5-5.9"/></svg>Personal</a>
+
+      <!-- ADMINISTRACIÓN (solo visible para admin) -->
+      <div class="grp only-admin">Administración</div>
+      <a data-view="catalogos" class="only-admin"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7h16M4 12h16M4 17h10"/><circle cx="19" cy="17" r="2"/></svg>Catálogos</a>
+      <a data-view="usuarios" class="only-admin"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="8" r="3.5"/><path d="M3 20a6 6 0 0 1 12 0"/></svg>Usuarios</a>
+      <a data-view="auditoria" class="only-admin"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 8v4l3 2"/><circle cx="12" cy="12" r="9"/></svg>Auditoría</a>
+
       <div class="grp">Sistema</div>
       <a href="../"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m3 11 9-8 9 8M5 9v11h14V9"/></svg>Inicio FAH</a>
     </nav>
@@ -266,6 +279,28 @@
           <button class="btn btn-primary" id="btn-nuevo" onclick="abrirNuevaPersona()">+ Nueva persona</button>
         </div>
         <div id="pers-cont"></div>
+      </section>
+
+      <!-- CATÁLOGOS (solo admin) -->
+      <section class="view only-admin" id="v-catalogos">
+        <div class="page-title">Catálogos</div>
+        <div class="page-sub">Grados, situaciones y armas.</div>
+        <div class="cat-grid" id="cat-cont"></div>
+      </section>
+
+      <!-- USUARIOS (solo admin) -->
+      <section class="view only-admin" id="v-usuarios">
+        <div class="page-title">Usuarios del módulo</div>
+        <div class="page-sub">Usuarios que pueden acceder a este módulo.</div>
+        <div class="toolbar"><div style="flex:1"></div><button class="btn" onclick="abrirCambiarPass()">Cambiar mi contraseña</button><button class="btn btn-primary" onclick="abrirNuevoUsuario()">+ Nuevo usuario</button></div>
+        <div class="tbl-wrap" id="tbl-usuarios"></div>
+      </section>
+
+      <!-- AUDITORÍA (solo admin) -->
+      <section class="view only-admin" id="v-auditoria">
+        <div class="page-title">Auditoría</div>
+        <div class="page-sub">Últimas acciones registradas.</div>
+        <div class="tbl-wrap" id="tbl-auditoria"></div>
       </section>
 
     </div>
@@ -319,6 +354,41 @@
   </div>
 </div>
 
+<!-- MODAL CATÁLOGO -->
+<div class="overlay" id="ov-cat">
+  <div class="modal" style="max-width:420px">
+    <div class="modal-h"><h3>Editar catálogo</h3><button class="modal-x" onclick="cerrar('ov-cat')">&times;</button></div>
+    <div class="modal-b">
+      <div class="field"><label>Valor</label><input id="cat-input" autocomplete="off"></div>
+      <div class="field" id="cat-orden-wrap" style="display:none"><label>Jerarquía (1 = mayor grado)</label><input id="cat-orden" type="number" min="1"></div>
+    </div>
+    <div class="modal-f"><button class="btn" onclick="cerrar('ov-cat')">Cancelar</button><button class="btn btn-primary" id="cat-save">Guardar</button></div>
+  </div>
+</div>
+
+<!-- MODAL USUARIO -->
+<div class="overlay" id="ov-user">
+  <div class="modal" style="max-width:440px">
+    <div class="modal-h"><h3>Nuevo usuario</h3><button class="modal-x" onclick="cerrar('ov-user')">&times;</button></div>
+    <div class="modal-b">
+      <div class="field"><label>Usuario *</label><input id="u-user" autocomplete="off"></div>
+      <div class="field"><label>Nombre para mostrar</label><input id="u-nombre" autocomplete="off"></div>
+      <div class="field"><label>Contraseña *</label><input id="u-pass" type="text" autocomplete="off"></div>
+      <div class="field"><label>Rol</label><select id="u-rol"><option value="editor">Editor</option><option value="admin">Admin</option></select></div>
+    </div>
+    <div class="modal-f"><button class="btn" onclick="cerrar('ov-user')">Cancelar</button><button class="btn btn-primary" id="user-save">Crear</button></div>
+  </div>
+</div>
+
+<!-- MODAL CAMBIAR PASS -->
+<div class="overlay" id="ov-pass">
+  <div class="modal" style="max-width:400px">
+    <div class="modal-h"><h3>Cambiar mi contraseña</h3><button class="modal-x" onclick="cerrar('ov-pass')">&times;</button></div>
+    <div class="modal-b"><div class="field"><label>Nueva contraseña</label><input id="pw-new" type="text" autocomplete="off"></div></div>
+    <div class="modal-f"><button class="btn" onclick="cerrar('ov-pass')">Cancelar</button><button class="btn btn-primary" id="pass-save">Guardar</button></div>
+  </div>
+</div>
+
 <!-- MODAL CONFIRMAR -->
 <div class="overlay" id="ov-confirm">
   <div class="modal" style="max-width:420px">
@@ -366,7 +436,7 @@ function fechaMil(iso){if(!iso)return'';const p=iso.split('-');if(p.length<3)ret
 const SS={};
 function ssInit(id,opciones,valor,placeholder){
   const host=document.getElementById(id); if(!host)return;
-  SS[id]={opciones:opciones||[],valor:valor||'',placeholder:placeholder||'Seleccionar…',hi:-1,onChange:(SS[id]&&SS[id].onChange)||null};
+  SS[id]={opciones:opciones||[],valor:valor||'',placeholder:placeholder||'Seleccionar…',hi:-1,onChange:null};
   host.classList.add('ss');
   host.innerHTML=`<button type="button" class="ss-btn" id="${id}-btn"></button><div class="ss-pop"><input class="ss-search" id="${id}-q" placeholder="Buscar…" autocomplete="off"><div class="ss-list" id="${id}-list"></div></div>`;
   host.querySelector('.ss-btn').addEventListener('click',e=>{e.stopPropagation();ssToggle(id);});
@@ -424,7 +494,7 @@ function mostrarApp(){
 }
 
 /* NAV */
-const titulos={parte:'Generar parte',personal:'Personal'};
+const titulos={parte:'Generar parte',personal:'Personal',catalogos:'Catálogos',usuarios:'Usuarios',auditoria:'Auditoría'};
 function irA(v){
   document.querySelectorAll('.nav a[data-view]').forEach(x=>x.classList.remove('active'));
   const link=document.querySelector('.nav a[data-view="'+v+'"]');if(link)link.classList.add('active');
@@ -434,6 +504,9 @@ function irA(v){
   document.getElementById('sidebar').classList.remove('open');document.getElementById('backdrop').classList.remove('show');
   if(v==='parte')armarParte();
   if(v==='personal')pintarPersonal();
+  if(v==='catalogos')pintarCatalogos();
+  if(v==='usuarios')cargarUsuarios();
+  if(v==='auditoria')cargarAuditoria();
 }
 document.querySelectorAll('.nav a[data-view]').forEach(a=>a.addEventListener('click',e=>{e.preventDefault();irA(a.dataset.view);}));
 const _sb=document.getElementById('sidebar'),_bd=document.getElementById('backdrop');
@@ -451,7 +524,6 @@ async function cargar(){
     const txt=alcanceTxt();
     document.getElementById('scope-info').textContent=txt;
     document.getElementById('scope-info2').textContent=txt;
-    // si no puede gestionar ninguna unidad, ocultar boton nuevo
     const puede=UNIS.some(u=>puedeGestionarUnidad(u.codigo));
     document.getElementById('btn-nuevo').style.display=puede?'':'none';
     armarParte();pintarPersonal();
@@ -503,8 +575,7 @@ function bloqueParte(lista){
 function armarParte(){
   const fecha=document.getElementById('parte-fecha').value||hoyISO();
   let out=(CONFIG.saludo||'Parte del día')+' *'+fechaMil(fecha)+'* \n';
-  if(!PERS.length){document.getElementById('parte-out').textContent='No hay personal en tu alcance todavía. Ve a “Personal” y agrega al primero.';window._parteTxt='';return;}
-  // varias unidades visibles -> agrupar por unidad
+  if(!PERS.length){document.getElementById('parte-out').textContent='No hay personal en tu alcance todavía. Ve a "Personal" y agrega al primero.';window._parteTxt='';return;}
   const cods=[...new Set(PERS.map(p=>p.codigoUnidad))];
   if(cods.length>1){
     cods.sort((a,b)=>String(a).localeCompare(String(b),undefined,{numeric:true}));
@@ -652,6 +723,108 @@ document.getElementById('enc-save').addEventListener('click',async function(){
     CONFIG.saludo=valor;toast('Encabezado guardado.','ok');cerrar('ov-enc');armarParte();
   }catch(e){toast(e.message,'err');}finally{this.disabled=false;}
 });
+
+/* ── CATÁLOGOS ── */
+const CAT_DEFS=[['grado_oficiales','Grados — Oficiales'],['grado_suboficiales','Grados — Suboficiales'],['grado_tropa','Grados — Tropa'],['grado_auxiliares','Grados — Auxiliares'],['situacion','Situaciones'],['arma','Armas']];
+let catCtx={tipo:null,valor:null};
+function pintarCatalogos(){
+  document.getElementById('cat-cont').innerHTML=CAT_DEFS.map(d=>{
+    const t=d[0],lbl=d[1],items=CAT[t]||[];
+    const esGrado=t.indexOf('grado_')===0;
+    const ord=(GRADOORD&&GRADOORD[t])||{};
+    const filas=items.length?items.map(v=>{
+      const badge=esGrado?`<span class="pill slate" style="margin-right:4px">#${ord[v]||'?'}</span>`:'';
+      return `<div class="cat-item">${badge}<span>${esc(v)}</span><div class="acts"><button class="ic-btn" title="Editar" onclick="catEdit('${t}','${esc(v)}')">✎</button><button class="ic-btn danger" title="Quitar" onclick="catDel('${t}','${esc(v)}')">✕</button></div></div>`;
+    }).join(''):'<div class="empty" style="padding:18px">Sin valores aún.</div>';
+    const addRow=esGrado
+      ? `<div class="toolbar" style="margin-bottom:12px;gap:6px"><input id="catnew-${t}" placeholder="Grado…" style="flex:1;min-width:0" class="inp"><input id="catord-${t}" type="number" min="1" placeholder="Jerarquía" style="width:92px" class="inp" onkeydown="if(event.key==='Enter')catAdd('${t}')"><button class="btn btn-primary" onclick="catAdd('${t}')">+</button></div>`
+      : `<div class="toolbar" style="margin-bottom:12px"><input id="catnew-${t}" placeholder="Agregar…" style="flex:1" class="inp" onkeydown="if(event.key==='Enter')catAdd('${t}')"><button class="btn btn-primary" onclick="catAdd('${t}')">+</button></div>`;
+    const ayuda=esGrado?'<div style="font-size:.74rem;color:var(--text-soft);margin-bottom:8px">Jerarquía: 1 = mayor grado. No se puede repetir.</div>':'';
+    return `<div class="panel"><div class="panel-h"><h3>${lbl}</h3><span style="margin-left:auto;color:var(--text-soft);font-size:.8rem">${items.length}</span></div><div class="panel-b">
+      ${ayuda}${addRow}
+      <div class="cat-list">${filas}</div></div></div>`;
+  }).join('');
+}
+async function catAdd(tipo){
+  const inp=document.getElementById('catnew-'+tipo),valor=inp.value.trim();
+  if(!valor){toast('Escribe un valor.','err');return;}
+  const params={action:'cat_crear',token:S.token,tipo,valor};
+  if(tipo.indexOf('grado_')===0){
+    const o=document.getElementById('catord-'+tipo); const orden=parseInt(o.value,10);
+    if(!orden||orden<1){toast('Indica la jerarquía (1 = mayor grado).','err');return;}
+    params.orden=orden;
+  }
+  try{const r=await api(params,'POST');if(!r.ok)throw new Error(r.error);
+    inp.value='';toast('Agregado.','ok');await recargar();
+  }catch(e){toast(e.message,'err');}
+}
+function catEdit(tipo,valor){
+  catCtx={tipo,valor};
+  const esGrado=tipo.indexOf('grado_')===0;
+  document.getElementById('cat-input').value=valor;
+  const wrap=document.getElementById('cat-orden-wrap');
+  if(esGrado){ wrap.style.display=''; document.getElementById('cat-orden').value=((GRADOORD&&GRADOORD[tipo]&&GRADOORD[tipo][valor])||''); }
+  else wrap.style.display='none';
+  abrir('ov-cat');setTimeout(()=>document.getElementById('cat-input').focus(),50);
+}
+document.getElementById('cat-save').addEventListener('click',async function(){
+  const nuevo=document.getElementById('cat-input').value.trim();
+  if(!nuevo){toast('No puede estar vacío.','err');return;}
+  const params={action:'cat_editar',token:S.token,tipo:catCtx.tipo,valor:catCtx.valor,nuevo};
+  if(catCtx.tipo.indexOf('grado_')===0){
+    const orden=parseInt(document.getElementById('cat-orden').value,10);
+    if(!orden||orden<1){toast('Indica la jerarquía (1 = mayor grado).','err');return;}
+    params.orden=orden;
+  }
+  this.disabled=true;
+  try{const r=await api(params,'POST');if(!r.ok)throw new Error(r.error);
+    toast('Actualizado'+(r.actualizados?' ('+r.actualizados+')':'')+'.','ok');cerrar('ov-cat');await recargar();
+  }catch(e){toast(e.message,'err');}finally{this.disabled=false;}
+});
+async function catDel(tipo,valor){
+  const ok=await confirmar({titulo:'Quitar del catálogo',msg:'¿Quitar "'+valor+'"? Los registros que ya lo usan no cambian.',ok:'Sí, quitar',danger:true});
+  if(!ok)return;
+  try{const r=await api({action:'cat_borrar',token:S.token,tipo,valor},'POST');if(!r.ok)throw new Error(r.error);toast('Quitado.','ok');await recargar();}
+  catch(e){toast(e.message,'err');}
+}
+async function recargar(){try{const res=await api({action:'parte',token:S.token});PERS=res.personal||[];CAT=res.catalogos||{};GRADOORD=res.gradoOrden||{};CARGOS=res.cargos||{};UNIS=res.unidades||[];CONFIG=res.config||{};YO=res.yo||{};if(res.categorias)CATEGORIAS=res.categorias;pintarCatalogos();pintarPersonal();armarParte();}catch(e){}}
+
+/* ── USUARIOS ── */
+async function cargarUsuarios(){
+  try{const res=await api({action:'usuarios',token:S.token});const us=res.usuarios||[];
+    document.getElementById('tbl-usuarios').innerHTML=`<table><thead><tr><th>Nombre / Usuario</th><th>Rol</th><th>Estado</th><th></th></tr></thead><tbody>${us.map(u=>`<tr>
+      <td data-label="Usuario"><b>${esc(u.nombre||u.usuario)}</b><div class="mono">${esc(u.usuario)}</div></td>
+      <td data-label="Rol"><select class="btn btn-sm" onchange="cambiarRol('${esc(u.usuario)}',this.value)">${['editor','admin'].map(r=>`<option value="${r}" ${u.rol===r?'selected':''}>${r}</option>`).join('')}</select></td>
+      <td data-label="Estado"><span class="pill ${u.activo?'green':'slate'}">${u.activo?'Activo':'Inactivo'}</span></td>
+      <td data-label="Acción"><div class="acts"><button class="btn btn-sm" onclick="toggleUsuario('${esc(u.usuario)}',${u.activo?'false':'true'})">${u.activo?'Desactivar':'Activar'}</button></div></td>
+    </tr>`).join('')}</tbody></table>`;
+  }catch(e){toast(e.message,'err');}
+}
+async function cambiarRol(usuario,rol){try{const r=await api({action:'usuario_rol',token:S.token,usuario,rol},'POST');if(!r.ok)throw new Error(r.error);toast('Rol actualizado.','ok');}catch(e){toast(e.message,'err');cargarUsuarios();}}
+async function toggleUsuario(usuario,activo){try{const r=await api({action:'usuario_estado',token:S.token,usuario,activo},'POST');if(!r.ok)throw new Error(r.error);toast('Estado actualizado.','ok');cargarUsuarios();}catch(e){toast(e.message,'err');}}
+function abrirNuevoUsuario(){['u-user','u-nombre','u-pass'].forEach(i=>document.getElementById(i).value='');document.getElementById('u-rol').value='editor';abrir('ov-user');}
+document.getElementById('user-save').addEventListener('click',async function(){
+  const d={action:'usuario_crear',token:S.token,usuario:document.getElementById('u-user').value.trim(),nombre:document.getElementById('u-nombre').value.trim(),pass:document.getElementById('u-pass').value,rol:document.getElementById('u-rol').value};
+  if(!d.usuario||!d.pass){toast('Usuario y contraseña requeridos.','err');return;}
+  this.disabled=true;
+  try{const r=await api(d,'POST');if(!r.ok)throw new Error(r.error);toast('Usuario creado.','ok');cerrar('ov-user');cargarUsuarios();}
+  catch(e){toast(e.message,'err');}finally{this.disabled=false;}
+});
+function abrirCambiarPass(){document.getElementById('pw-new').value='';abrir('ov-pass');}
+document.getElementById('pass-save').addEventListener('click',async function(){
+  const pass=document.getElementById('pw-new').value;
+  if(pass.length<5){toast('Mínimo 5 caracteres.','err');return;}
+  this.disabled=true;
+  try{const r=await api({action:'cambiar_pass',token:S.token,pass},'POST');if(!r.ok)throw new Error(r.error);toast('Contraseña cambiada.','ok');cerrar('ov-pass');}
+  catch(e){toast(e.message,'err');}finally{this.disabled=false;}
+});
+
+/* ── AUDITORÍA ── */
+async function cargarAuditoria(){
+  try{const res=await api({action:'auditoria',token:S.token});const a=res.auditoria||[];
+    document.getElementById('tbl-auditoria').innerHTML=a.length?`<table><thead><tr><th>Fecha</th><th>Usuario</th><th>Acción</th><th>Detalle</th></tr></thead><tbody>${a.map(x=>`<tr><td class="mono" style="white-space:nowrap">${esc(x.fecha)}</td><td><b>${esc(x.usuario)}</b></td><td>${esc(x.accion)} ${esc(x.id)}</td><td>${esc(x.detalle||'')}</td></tr>`).join('')}</tbody></table>`:'<div class="empty">Sin movimientos.</div>';
+  }catch(e){toast(e.message,'err');}
+}
 
 /* MODALES */
 const ICO_INFO='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 8h.01M11 12h1v4h1"/></svg>';
