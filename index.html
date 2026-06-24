@@ -389,7 +389,7 @@
 <div class="toast" id="toast"></div>
 
 <script>
-const API_URL = "https://script.google.com/macros/s/AKfycby_YOgPRdKMGZ6Dy4Y6UM-d0aUMD2BNNin1EbEcjIUaL1EZ3X3m-netU0xBnP8dxlG6oQ/exec";
+const API_URL = "https://script.google.com/macros/s/AKfycbzZ7mrY8Ux1lRO3AqqpENbQIA5_1Vtnt3Jz_8gROZcjHSjgue3Fu4QN5kBrrCpbFDAr3g/exec";
 
 const TIPOS=['Fuerza','Departamento','Base Aerea / Centro de Estudio','Seccion','Subseccion'];
 const FUNCIONES=[
@@ -655,7 +655,7 @@ async function cargarCargos(){
     const cargos=res.cargos||[];
     document.getElementById('cg-cont').innerHTML=`<div class="panel"><div class="panel-h"><h3>Cargos de ${esc(u?u.nombre:cgUnidad)} <span class="mono" style="color:var(--text-dim);font-weight:400">${esc(cgUnidad)}</span></h3></div><div class="panel-b">
       <div class="toolbar" style="margin-bottom:16px"><input id="cg-nuevo" placeholder="Nombre del cargo…" style="flex:1;background:var(--soft);border:1px solid var(--border);border-radius:9px;padding:10px 12px;font-size:.92rem;font-family:inherit"><input id="cg-orden" type="number" min="1" placeholder="Orden" style="width:90px;background:var(--soft);border:1px solid var(--border);border-radius:9px;padding:10px 12px;font-size:.92rem;font-family:inherit"><button class="btn btn-primary" id="cg-btn" onclick="crearCargo()">+ Agregar</button></div>
-      ${cargos.length?`<div class="tbl-wrap" style="box-shadow:none;border-color:var(--border)"><table><tbody>${cargos.map(c=>`<tr><td style="width:60px"><span class="mono" style="color:var(--text-dim)">${c.orden||'—'}</span></td><td><b>${esc(c.cargo)}</b></td><td style="text-align:right"><button class="ic-btn danger" onclick="borrarCargo('${esc(c.cargo)}')">✕</button></td></tr>`).join('')}</tbody></table></div>`:'<div class="empty">Esta unidad aún no tiene cargos. Agrega el primero arriba.</div>'}
+      ${cargos.length?`<div class="tbl-wrap" style="box-shadow:none;border-color:var(--border)"><table><tbody>${cargos.map(c=>`<tr><td style="width:60px"><span class="mono" style="color:var(--text-dim)">${c.orden||'—'}</span></td><td><b>${esc(c.cargo)}</b></td><td style="text-align:right"><div class="acts"><button class="ic-btn" title="Editar" onclick="editarCargo('${esc(c.cargo)}',${c.orden||0})">✎</button><button class="ic-btn danger" title="Borrar" onclick="borrarCargo('${esc(c.cargo)}')">✕</button></div></td></tr>`).join('')}</tbody></table></div>`:'<div class="empty">Esta unidad aún no tiene cargos. Agrega el primero arriba.</div>'}
     </div></div>`;
     document.getElementById('cg-nuevo').addEventListener('keydown',e=>{if(e.key==='Enter')crearCargo();});
   }catch(e){toast(e.message,'err');}
@@ -668,6 +668,19 @@ async function crearCargo(){
   try{const r=await api({action:'cargo_crear',token:S.token,codigoUnidad:cgUnidad,cargo,orden},'POST');if(!r.ok)throw new Error(r.error);
     toast('Cargo agregado.','ok');cargarCargos();
   }catch(e){toast(e.message,'err');}finally{setLoading(btn, false);}
+}
+async function editarCargo(cargo, orden){
+  const nuevo = prompt('Nuevo nombre del cargo:', cargo);
+  if(nuevo===null) return;
+  const nom = nuevo.trim();
+  if(!nom){ toast('El cargo no puede estar vacío.','err'); return; }
+  const ord = prompt('Orden (número):', orden||'');
+  try{
+    const r=await api({action:'cargo_editar',token:S.token,codigoUnidad:cgUnidad,cargo,nuevo:nom,orden:(ord===null?'':ord.trim())},'POST');
+    if(!r.ok) throw new Error(r.error);
+    toast('Cargo actualizado'+(r.actualizados?' ('+r.actualizados+' persona/s)':'')+'.','ok');
+    cargarCargos();
+  }catch(e){ toast(e.message,'err'); }
 }
 async function borrarCargo(cargo){
   const ok=await confirmar({titulo:'Borrar cargo',msg:'¿Borrar el cargo "'+cargo+'" de esta unidad?',ok:'Sí, borrar',danger:true});
