@@ -27,7 +27,6 @@
   .hidden{display:none!important}
   .mono{font-family:'JetBrains Mono',monospace}
 
-  /* LOGIN */
   #login{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px;background:linear-gradient(135deg,#1c2434,#24303f)}
   .login-card{background:var(--card);border-radius:16px;box-shadow:var(--shadow-md);padding:38px 34px;width:100%;max-width:410px;text-align:center}
   .login-card img.logo{width:70px;height:70px;object-fit:contain;margin:0 auto 16px;display:block}
@@ -44,7 +43,6 @@
   .login-err.show{display:block}
   .login-hint{margin-top:16px;font-size:.78rem}
 
-  /* SHELL */
   #app{display:flex;min-height:100vh}
   .sidebar{width:266px;background:var(--side);color:var(--side-text);display:flex;flex-direction:column;position:fixed;inset:0 auto 0 0;z-index:40;transition:transform .3s,width .2s}
   .sidebar .brand{display:flex;align-items:center;gap:12px;padding:22px 20px 18px}
@@ -106,10 +104,12 @@
 
   .scope{display:inline-flex;align-items:center;gap:8px;background:var(--primary-soft);color:var(--primary);font-size:.78rem;font-weight:600;padding:6px 12px;border-radius:9999px;margin-bottom:18px}
 
-  /* parte salida */
   .parte-out{background:#0f172a;color:#e2e8f0;border-radius:12px;padding:20px;font-family:'JetBrains Mono',monospace;font-size:.82rem;line-height:1.55;white-space:pre-wrap;word-break:break-word;max-height:60vh;overflow-y:auto}
 
-  /* tarjetas personal */
+  .uni-ck{display:flex;align-items:center;gap:8px;padding:7px 9px;border-radius:7px;cursor:pointer;font-size:.88rem}
+  .uni-ck:hover{background:var(--soft)}
+  .uni-ck input{width:16px;height:16px;accent-color:var(--primary)}
+
   .cat-h{display:flex;align-items:center;gap:10px;font-size:.78rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--text-dim);margin:22px 0 12px}
   .cat-h .cnt{background:var(--primary-soft);color:var(--primary);border-radius:9999px;padding:1px 9px;font-size:.74rem}
   .cat-h:first-child{margin-top:0}
@@ -123,7 +123,6 @@
   .uni-tag{font-size:.7rem;font-weight:600;color:var(--primary);background:var(--primary-soft);padding:2px 9px;border-radius:9999px}
   .empty{padding:46px 20px;text-align:center;color:var(--text-dim);font-size:.92rem;background:var(--card);border:1px dashed var(--border);border-radius:14px}
 
-  /* MODAL */
   .overlay{position:fixed;inset:0;background:rgba(28,36,52,.55);display:none;align-items:flex-start;justify-content:center;padding:40px 16px;z-index:60;overflow-y:auto}
   .overlay.show{display:flex}
   .modal{background:var(--card);border-radius:14px;box-shadow:var(--shadow-md);width:100%;max-width:560px;animation:fade .2s ease}
@@ -145,7 +144,6 @@
   .cf-ic.danger{background:var(--red-soft);color:var(--red-text)}
   .cf-ic.info{background:var(--primary-soft);color:var(--primary)}
 
-  /* SELECT BUSCADOR */
   .ss{position:relative}
   .ss-btn{width:100%;background:var(--soft);border:1px solid var(--border);border-radius:9px;padding:10px 34px 10px 12px;font-size:.92rem;color:var(--text);text-align:left;position:relative;min-height:40px;display:flex;align-items:center}
   .ss-btn:focus,.ss.open .ss-btn{outline:none;border-color:var(--primary);box-shadow:0 0 0 3px var(--primary-soft);background:#fff}
@@ -168,11 +166,12 @@
   .backdrop{position:fixed;inset:0;background:rgba(28,36,52,.5);z-index:35;display:none}
   .backdrop.show{display:block}
 
-  /* catalogos */
   .cat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:18px}
   .cat-item{display:flex;align-items:center;gap:10px;padding:8px 12px;border:1px solid var(--border);border-radius:9px;margin-bottom:6px;font-size:.9rem;flex-wrap:wrap}
   .cat-item span{flex:1;min-width:80px;overflow-wrap:break-word}
   .cat-list{max-height:300px;overflow-y:auto}
+  .pill{font-size:.72rem;font-weight:600;padding:3px 10px;border-radius:9999px;display:inline-block}
+  .pill.slate{background:#e2e8f0;color:#475569}
 
   @media(min-width:881px){
     .backdrop{display:none!important}
@@ -200,7 +199,6 @@
 </head>
 <body>
 
-<!-- LOGIN -->
 <div id="login">
   <div class="login-card">
     <img src="../logo.png" class="logo" alt="" onerror="this.style.display='none';document.getElementById('lf').style.display='flex'">
@@ -217,7 +215,6 @@
   </div>
 </div>
 
-<!-- APP -->
 <div id="app" class="hidden">
   <aside class="sidebar" id="sidebar">
     <div class="brand"><img src="../logo.png" alt="" onerror="this.style.display='none';this.nextElementSibling.style.display='grid'"><div class="lf">FAH</div><div><b>Parte</b><span>FA-1 · Personal</span></div></div>
@@ -225,11 +222,8 @@
       <div class="grp">Personal</div>
       <a data-view="parte" class="active"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/></svg>Generar parte</a>
       <a data-view="personal"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="8" r="3.5"/><path d="M3 20a6 6 0 0 1 12 0"/><path d="M16 5.5a3 3 0 0 1 0 5.5M21 20a6 6 0 0 0-5-5.9"/></svg>Personal</a>
-
-      <!-- ADMINISTRACIÓN (solo Catálogos) -->
       <div class="grp only-admin">Administración</div>
       <a data-view="catalogos" class="only-admin"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7h16M4 12h16M4 17h10"/><circle cx="19" cy="17" r="2"/></svg>Catálogos</a>
-
       <div class="grp">Sistema</div>
       <a href="../"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m3 11 9-8 9 8M5 9v11h14V9"/></svg>Inicio FAH</a>
     </nav>
@@ -252,14 +246,32 @@
       <!-- GENERAR PARTE -->
       <section class="view active" id="v-parte">
         <div class="page-title">Generar parte</div>
-        <div class="page-sub">Parte de personal del día, ordenado por antigüedad de grado.</div>
+        <div class="page-sub">Parte de totales por categoría. Elige a quién reportas y qué unidades sumar.</div>
         <div class="scope" id="scope-info"></div>
+
+        <div class="panel">
+          <div class="panel-h"><h3>Configuración</h3></div>
+          <div class="panel-b">
+            <div class="grid2">
+              <div class="field"><label>Grado a reportar (Oficiales)</label><div id="rep-grado"></div></div>
+              <div class="field"><label>Fecha</label><input type="date" id="parte-fecha"></div>
+            </div>
+            <div class="field" style="margin-bottom:8px"><label>Unidades a incluir</label>
+              <div style="display:flex;gap:8px;margin-bottom:8px">
+                <input type="search" id="uni-bus" class="inp" placeholder="Buscar unidad…" style="flex:1;min-width:0">
+                <button class="btn btn-sm" type="button" onclick="selUnidades(true)">Todas</button>
+                <button class="btn btn-sm" type="button" onclick="selUnidades(false)">Ninguna</button>
+              </div>
+              <div id="uni-checks" style="max-height:230px;overflow-y:auto;border:1px solid var(--border);border-radius:10px;padding:6px"></div>
+            </div>
+            <div class="field" style="margin-bottom:0"><label>Texto de la unidad (opcional)</label><input id="rep-unidad-txt" class="inp" style="width:100%" placeholder="Por defecto lista las unidades marcadas"><div class="hint">Si lo dejas vacío, se listan las unidades seleccionadas. Escribe aquí para sobrescribir (ej. “las unidades de seguridad”).</div></div>
+          </div>
+        </div>
+
         <div class="panel">
           <div class="panel-h">
             <h3>Parte</h3>
-            <input type="date" id="parte-fecha" class="inp" style="margin-left:8px">
             <div style="flex:1"></div>
-            <button class="btn" onclick="abrirEncabezado()">Encabezado</button>
             <button class="btn btn-primary" onclick="copiarParte()">Copiar mensaje</button>
             <button class="btn btn-wa" onclick="enviarWhatsApp()"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.5 15.3L2 22l4.8-1.5A10 10 0 1 0 12 2zm0 18a8 8 0 0 1-4.1-1.1l-.3-.2-2.8.9.9-2.7-.2-.3A8 8 0 1 1 12 20zm4.4-6c-.2-.1-1.4-.7-1.6-.8-.2-.1-.4-.1-.5.1l-.7.9c-.1.2-.3.2-.5.1a6.5 6.5 0 0 1-3.2-2.8c-.1-.2 0-.4.1-.5l.4-.5.2-.4v-.4l-.8-1.8c-.2-.5-.4-.4-.5-.4h-.5a1 1 0 0 0-.7.3c-.3.3-.9.9-.9 2.1s.9 2.5 1.1 2.6c.1.2 1.8 2.8 4.4 3.9 1.6.7 2.2.7 3 .6.5 0 1.4-.6 1.6-1.1.2-.6.2-1 .1-1.1l-.4-.3z"/></svg>WhatsApp</button>
           </div>
@@ -282,7 +294,7 @@
       <!-- CATÁLOGOS (solo admin) -->
       <section class="view only-admin" id="v-catalogos">
         <div class="page-title">Catálogos</div>
-        <div class="page-sub">Grados, situaciones y armas.</div>
+        <div class="page-sub">Grados (con antigüedad por categoría), situaciones y armas.</div>
         <div class="cat-grid" id="cat-cont"></div>
       </section>
 
@@ -328,15 +340,6 @@
   </div>
 </div>
 
-<!-- MODAL ENCABEZADO -->
-<div class="overlay" id="ov-enc">
-  <div class="modal" style="max-width:520px">
-    <div class="modal-h"><h3>Encabezado del parte</h3><button class="modal-x" onclick="cerrar('ov-enc')">&times;</button></div>
-    <div class="modal-b"><div class="field"><label>Texto del saludo</label><textarea id="enc-txt" style="min-height:90px"></textarea><div class="hint">Después del saludo se agrega la fecha militar (ej. 23JUN26).</div></div></div>
-    <div class="modal-f"><button class="btn" onclick="cerrar('ov-enc')">Cancelar</button><button class="btn btn-primary" id="enc-save">Guardar</button></div>
-  </div>
-</div>
-
 <!-- MODAL CATÁLOGO -->
 <div class="overlay" id="ov-cat">
   <div class="modal" style="max-width:420px">
@@ -365,15 +368,17 @@
 
 <script>
 /* ════════ CONFIGURACIÓN ════════ */
-const API_URL = "https://script.google.com/macros/s/AKfycbxIoW9xDHoedPNElQz-Ws4Q1K1G4Mc5Rl1V2pXX5LR-vYomh64IhtRmP6VymTm-GIx26A/exec";
+const API_URL = "https://script.google.com/macros/s/AKfycby_YOgPRdKMGZ6Dy4Y6UM-d0aUMD2BNNin1EbEcjIUaL1EZ3X3m-netU0xBnP8dxlG6oQ/exec";
 /* ════════════════════════════════ */
 
 const MESES=['ENE','FEB','MAR','ABR','MAY','JUN','JUL','AGO','SEP','OCT','NOV','DIC'];
 const _mem={};
 const store={get:k=>{try{return localStorage.getItem(k)}catch(e){return _mem[k]||null}},set:(k,v)=>{try{localStorage.setItem(k,v)}catch(e){_mem[k]=v}},del:k=>{try{localStorage.removeItem(k)}catch(e){delete _mem[k]}}};
 let S={token:store.get('fah_token'),nombre:store.get('fah_nombre'),codigoUnidad:store.get('fah_cod'),alcance:store.get('fah_alc'),rol:store.get('fah_rol')};
-let PERS=[], CAT={}, GRADOORD={}, CARGOS={}, UNIS=[], CONFIG={}, YO={}, CATEGORIAS=['Oficiales','Suboficiales','Tropa','Auxiliares'];
+let PERS=[], CAT={}, GRADOORD={}, CARGOS={}, UNIS=[], CONFIG={}, YO={};
+let CATEGORIAS=['Oficiales','Suboficiales','Tropa','Auxiliares','Cadetes','Estudiantes Tecnicos'];
 let persEdit=null, sitId=null;
+let repUnidades=new Set();
 
 async function api(params,method='GET'){
   if(method==='GET'){
@@ -391,6 +396,9 @@ function iniciales(n){return String(n||'?').trim().split(/\s+/).slice(0,2).map(w
 function pad(n){return ('0'+n).slice(-2);}
 function hoyISO(){const d=new Date();return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate());}
 function fechaMil(iso){if(!iso)return'';const p=iso.split('-');if(p.length<3)return iso;const dd=pad(+p[2]),mm=MESES[(+p[1])-1]||'',yy=('00'+((+p[0])%1000)).slice(-2);return dd+mm+yy;}
+function tipoGrado(cat){return 'grado_'+String(cat||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]+/g,'_').replace(/^_|_$/g,'');}
+function saludoHora(){const h=new Date().getHours();if(h>=6&&h<12)return'Buenos días';if(h>=12&&h<18)return'Buenas tardes';return'Buenas noches';}
+function listaNatural(arr){arr=arr.filter(Boolean);if(!arr.length)return'';if(arr.length===1)return arr[0];return arr.slice(0,-1).join(', ')+' y '+arr[arr.length-1];}
 
 /* SELECT BUSCADOR */
 const SS={};
@@ -398,16 +406,16 @@ function ssInit(id,opciones,valor,placeholder){
   const host=document.getElementById(id); if(!host)return;
   SS[id]={opciones:opciones||[],valor:valor||'',placeholder:placeholder||'Seleccionar…',hi:-1,onChange:null};
   host.classList.add('ss');
-  host.innerHTML=`<button type="button" class="ss-btn" id="${id}-btn"></button><div class="ss-pop"><input class="ss-search" id="${id}-q" placeholder="Buscar…" autocomplete="off"><div class="ss-list" id="${id}-list"></div></div>`;
+  host.innerHTML='<button type="button" class="ss-btn" id="'+id+'-btn"></button><div class="ss-pop"><input class="ss-search" id="'+id+'-q" placeholder="Buscar…" autocomplete="off"><div class="ss-list" id="'+id+'-list"></div></div>';
   host.querySelector('.ss-btn').addEventListener('click',e=>{e.stopPropagation();ssToggle(id);});
   const q=host.querySelector('.ss-search');
   q.addEventListener('input',()=>ssRender(id));
   q.addEventListener('keydown',e=>ssKey(id,e));
   ssPaint(id);
 }
-function ssPaint(id){const s=SS[id],btn=document.getElementById(id+'-btn');const sel=s.opciones.find(o=>o.value===s.valor);if(sel){btn.classList.remove('ph');btn.innerHTML=esc(sel.label)+(sel.sub?`<small>${esc(sel.sub)}</small>`:'');}else{btn.classList.add('ph');btn.textContent=s.placeholder;}}
+function ssPaint(id){const s=SS[id],btn=document.getElementById(id+'-btn');const sel=s.opciones.find(o=>o.value===s.valor);if(sel){btn.classList.remove('ph');btn.innerHTML=esc(sel.label)+(sel.sub?'<small>'+esc(sel.sub)+'</small>':'');}else{btn.classList.add('ph');btn.textContent=s.placeholder;}}
 function ssToggle(id,forzar){document.querySelectorAll('.ss.open').forEach(h=>{if(h.id!==id)h.classList.remove('open');});const host=document.getElementById(id);const ab=forzar!==undefined?forzar:!host.classList.contains('open');host.classList.toggle('open',ab);if(ab){const q=document.getElementById(id+'-q');q.value='';ssRender(id);setTimeout(()=>q.focus(),30);}}
-function ssRender(id){const s=SS[id],q=(document.getElementById(id+'-q').value||'').toLowerCase().trim();const list=document.getElementById(id+'-list');const fil=s.opciones.filter(o=>!q||(o.label+' '+(o.sub||'')).toLowerCase().indexOf(q)!==-1);s._fil=fil;s.hi=fil.length?0:-1;list.innerHTML=fil.length?fil.map((o,i)=>`<div class="ss-opt ${o.value===s.valor?'sel':''} ${i===s.hi?'hi':''}" data-i="${i}">${esc(o.label)}${o.sub?`<small>${esc(o.sub)}</small>`:''}</div>`).join(''):'<div class="ss-empty">Sin coincidencias</div>';list.querySelectorAll('.ss-opt').forEach(el=>el.addEventListener('click',()=>ssPick(id,fil[+el.dataset.i].value)));}
+function ssRender(id){const s=SS[id],q=(document.getElementById(id+'-q').value||'').toLowerCase().trim();const list=document.getElementById(id+'-list');const fil=s.opciones.filter(o=>!q||(o.label+' '+(o.sub||'')).toLowerCase().indexOf(q)!==-1);s._fil=fil;s.hi=fil.length?0:-1;list.innerHTML=fil.length?fil.map((o,i)=>'<div class="ss-opt '+(o.value===s.valor?'sel':'')+' '+(i===s.hi?'hi':'')+'" data-i="'+i+'">'+esc(o.label)+(o.sub?'<small>'+esc(o.sub)+'</small>':'')+'</div>').join(''):'<div class="ss-empty">Sin coincidencias</div>';list.querySelectorAll('.ss-opt').forEach(el=>el.addEventListener('click',()=>ssPick(id,fil[+el.dataset.i].value)));}
 function ssKey(id,e){const s=SS[id],fil=s._fil||[];if(e.key==='ArrowDown'){e.preventDefault();s.hi=Math.min(fil.length-1,s.hi+1);ssHi(id);}else if(e.key==='ArrowUp'){e.preventDefault();s.hi=Math.max(0,s.hi-1);ssHi(id);}else if(e.key==='Enter'){e.preventDefault();if(fil[s.hi])ssPick(id,fil[s.hi].value);}else if(e.key==='Escape'){ssToggle(id,false);}}
 function ssHi(id){const list=document.getElementById(id+'-list');list.querySelectorAll('.ss-opt').forEach((el,i)=>el.classList.toggle('hi',i===SS[id].hi));const hi=list.querySelector('.ss-opt.hi');if(hi)hi.scrollIntoView({block:'nearest'});}
 function ssPick(id,val){SS[id].valor=val;ssPaint(id);ssToggle(id,false);if(SS[id].onChange)SS[id].onChange(val);}
@@ -443,6 +451,7 @@ function cerrarSesion(expirada){
 function mostrarApp(){
   document.getElementById('login').classList.add('hidden');
   document.getElementById('app').classList.remove('hidden');
+  document.body.className='role-'+S.rol;
   if(store.get('fah_sbcol')==='1')document.body.classList.add('sb-collapsed');
   document.getElementById('sb-nombre').textContent=S.nombre;
   document.getElementById('sb-rol').textContent=S.rol+' · '+S.alcance;
@@ -462,7 +471,7 @@ function irA(v){
   const sec=document.getElementById('v-'+v);if(sec)sec.classList.add('active');
   document.getElementById('tb-title').textContent=titulos[v]||'';
   document.getElementById('sidebar').classList.remove('open');document.getElementById('backdrop').classList.remove('show');
-  if(v==='parte')armarParte();
+  if(v==='parte')refrescarParteVista();
   if(v==='personal')pintarPersonal();
   if(v==='catalogos')pintarCatalogos();
 }
@@ -484,7 +493,9 @@ async function cargar(){
     document.getElementById('scope-info2').textContent=txt;
     const puede=UNIS.some(u=>puedeGestionarUnidad(u.codigo));
     document.getElementById('btn-nuevo').style.display=puede?'':'none';
-    armarParte();pintarPersonal();
+    // preselección: unidades que tienen personal
+    repUnidades=new Set([...new Set(PERS.map(p=>p.codigoUnidad))]);
+    refrescarParteVista();pintarPersonal();
   }catch(e){ if(e.message!=='Sesión expirada')toast(e.message,'err'); }
 }
 function alcanceTxt(){
@@ -502,53 +513,59 @@ function puedeGestionarUnidad(cod){
 }
 function nombreUnidad(cod){const u=UNIS.find(x=>x.codigo===cod);return u?u.nombre:cod;}
 
-/* PARTE */
-function jerarquiaDe(p){const t='grado_'+String(p.categoria||'').toLowerCase();const m=GRADOORD[t]||{};const o=m[p.grado];return (o&&o>0)?o:9999;}
-function detalleTxt(p){
-  const parts=[];
-  if(p.motivo)parts.push(p.motivo);
-  if(p.desde&&p.hasta)parts.push(p.desde+' al '+p.hasta);
-  else if(p.desde)parts.push('desde '+p.desde);
-  return parts.length?' ('+parts.join(', ')+')':'';
+/* ── GENERAR PARTE (totales) ── */
+function refrescarParteVista(){
+  // grado a reportar: solo Oficiales
+  const ops=(CAT.grado_oficiales||[]).map(g=>({value:g,label:g}));
+  ssInit('rep-grado',ops,ssVal('rep-grado')||'','Seleccionar grado…');
+  ssOnChange('rep-grado',()=>armarParte());
+  pintarUnidadesCheck();
+  armarParte();
 }
-function bloqueParte(lista){
-  let out='';
-  CATEGORIAS.forEach(cat=>{
-    const gente=lista.filter(p=>p.categoria===cat);
-    if(!gente.length)return;
-    out+='\n*'+cat.toUpperCase()+'*\n';
-    const bySit={};
-    gente.forEach(p=>{const s=p.situacion||'(Sin situación)';(bySit[s]=bySit[s]||[]).push(p);});
-    const sits=Object.keys(bySit).sort((a,b)=>{const da=/disponible/i.test(a)?0:1,db=/disponible/i.test(b)?0:1;return da-db||a.localeCompare(b,'es');});
-    sits.forEach(s=>{out+=s+' = '+pad(bySit[s].length)+'\n';});
-    out+='Total '+pad(gente.length)+'\n';
-    sits.forEach(s=>{
-      out+='\n*'+s+'*\n';
-      bySit[s].sort((a,b)=>jerarquiaDe(a)-jerarquiaDe(b)||(a.nombre||'').localeCompare(b.nombre||'','es'));
-      bySit[s].forEach((p,i)=>{const grado=p.grado?p.grado+(p.arma?' de '+p.arma:''):(p.arma||'');out+=(i+1)+'. '+(grado?grado+' ':'')+p.nombre+detalleTxt(p)+'\n';});
-    });
-  });
-  return out;
+function unidadesParaParte(){return UNIS.slice().sort((a,b)=>a.codigo.localeCompare(b.codigo,undefined,{numeric:true}));}
+function pintarUnidadesCheck(){
+  const q=(document.getElementById('uni-bus').value||'').toLowerCase();
+  const arr=unidadesParaParte().filter(u=>!q||(u.nombre+' '+u.codigo).toLowerCase().indexOf(q)!==-1);
+  const cont=document.getElementById('uni-checks');
+  if(!arr.length){cont.innerHTML='<div style="padding:12px;color:var(--text-soft);font-size:.85rem">No hay unidades visibles.</div>';return;}
+  cont.innerHTML=arr.map(u=>{
+    const n=PERS.filter(p=>p.codigoUnidad===u.codigo).length;
+    const ck=repUnidades.has(u.codigo)?'checked':'';
+    return '<label class="uni-ck"><input type="checkbox" '+ck+' onchange="toggleUnidadParte(\''+esc(u.codigo)+'\',this.checked)"> <b>'+esc(u.nombre)+'</b> <small class="mono" style="color:var(--text-soft)">'+esc(u.codigo)+'</small> <span style="margin-left:auto;color:var(--text-dim);font-size:.78rem">'+n+' pers.</span></label>';
+  }).join('');
 }
+function toggleUnidadParte(cod,on){ if(on)repUnidades.add(cod); else repUnidades.delete(cod); armarParte(); }
+function selUnidades(todas){ repUnidades=new Set(todas?unidadesParaParte().map(u=>u.codigo):[]); pintarUnidadesCheck(); armarParte(); }
+document.getElementById('uni-bus').addEventListener('input',pintarUnidadesCheck);
+document.getElementById('rep-unidad-txt').addEventListener('input',armarParte);
+document.getElementById('parte-fecha').addEventListener('change',armarParte);
+
 function armarParte(){
   const fecha=document.getElementById('parte-fecha').value||hoyISO();
-  let out=(CONFIG.saludo||'Parte del día')+' *'+fechaMil(fecha)+'* \n';
-  if(!PERS.length){document.getElementById('parte-out').textContent='No hay personal en tu alcance todavía. Ve a "Personal" y agrega al primero.';window._parteTxt='';return;}
-  const cods=[...new Set(PERS.map(p=>p.codigoUnidad))];
-  if(cods.length>1){
-    cods.sort((a,b)=>String(a).localeCompare(String(b),undefined,{numeric:true}));
-    cods.forEach(c=>{
-      const lista=PERS.filter(p=>p.codigoUnidad===c);
-      out+='\n══════════\n*'+nombreUnidad(c).toUpperCase()+'* ('+c+')\n';
-      out+=bloqueParte(lista);
-      out+='\nSubtotal '+nombreUnidad(c)+': '+pad(lista.length)+'\n';
-    });
-    out+='\n*PARA UN TOTAL GENERAL DE: '+pad(PERS.length)+'*';
-  }else{
-    out+=bloqueParte(PERS);
-    out+='\n*PARA UN TOTAL DE: '+pad(PERS.length)+'*';
-  }
-  document.getElementById('parte-out').textContent=out;window._parteTxt=out;
+  const grado=ssVal('rep-grado');
+  const sel=[...repUnidades];
+  let unidadTxt=document.getElementById('rep-unidad-txt').value.trim();
+  if(!unidadTxt) unidadTxt=listaNatural(sel.map(c=>nombreUnidad(c)));
+  const out=document.getElementById('parte-out');
+  if(!sel.length){out.textContent='Selecciona al menos una unidad para incluir en el parte.';window._parteTxt='';return;}
+  const gente=PERS.filter(p=>sel.indexOf(p.codigoUnidad)!==-1);
+  let txt=saludoHora()+(grado?' '+grado:'')+' muy respetuosamente le reporto a usted el parte de '+(unidadTxt||'—')+' con la siguiente situación para el día de '+fechaMil(fecha)+':\n';
+  let total=0;
+  CATEGORIAS.forEach(cat=>{
+    const g=gente.filter(p=>p.categoria===cat);
+    if(!g.length)return;
+    total+=g.length;
+    txt+='\n'+cat+'\n';
+    const bySit={};
+    g.forEach(p=>{const s=p.situacion||'(Sin situación)';bySit[s]=(bySit[s]||0)+1;});
+    const sits=Object.keys(bySit).sort((a,b)=>{const da=/disponible/i.test(a)?0:1,db=/disponible/i.test(b)?0:1;return da-db||a.localeCompare(b,'es');});
+    sits.forEach(s=>{txt+=s+' = '+pad(bySit[s])+'\n';});
+    txt+='Subtotal = '+pad(g.length)+'\n';
+  });
+  if(!total){out.textContent='Las unidades seleccionadas no tienen personal registrado.';window._parteTxt='';return;}
+  txt+='\nPara un total de: '+pad(total)+'\n';
+  txt+='\nSin más que agregar, de usted respetuosamente';
+  out.textContent=txt;window._parteTxt=txt;
 }
 function copiarParte(){
   const txt=window._parteTxt||'';if(!txt){toast('No hay parte para copiar.','err');return;}
@@ -559,6 +576,8 @@ function copiaManual(txt){const ta=document.createElement('textarea');ta.value=t
 function enviarWhatsApp(){const txt=window._parteTxt||'';if(!txt){toast('No hay parte para enviar.','err');return;}window.open('https://wa.me/?text='+encodeURIComponent(txt),'_blank');}
 
 /* PERSONAL */
+function jerarquiaDe(p){const t=tipoGrado(p.categoria);const m=GRADOORD[t]||{};const o=m[p.grado];return (o&&o>0)?o:9999;}
+function detalleTxt(p){const parts=[];if(p.motivo)parts.push(p.motivo);if(p.desde&&p.hasta)parts.push(p.desde+' al '+p.hasta);else if(p.desde)parts.push('desde '+p.desde);return parts.length?' ('+parts.join(', ')+')':'';}
 function pintarPersonal(){
   const q=(document.getElementById('bus').value||'').toLowerCase();
   let arr=PERS.filter(p=>!q||(p.nombre+' '+p.grado+' '+p.arma+' '+(p.cargo||'')+' '+(p.situacion||'')).toLowerCase().indexOf(q)!==-1);
@@ -570,27 +589,19 @@ function pintarPersonal(){
     const g=arr.filter(p=>p.categoria===cat);
     if(!g.length)return;
     g.sort((a,b)=>jerarquiaDe(a)-jerarquiaDe(b)||(a.nombre||'').localeCompare(b.nombre||'','es'));
-    html+=`<div class="cat-h">${esc(cat)} <span class="cnt">${g.length}</span></div>`;
+    html+='<div class="cat-h">'+esc(cat)+' <span class="cnt">'+g.length+'</span></div>';
     html+=g.map(p=>{
       const grado=(p.grado?p.grado+(p.arma?' de '+p.arma:'')+' ':'');
       const dis=/disponible/i.test(p.situacion||'');
-      return `<div class="prow">
-        <div>
-          <div class="nm">${esc(grado+p.nombre)}</div>
-          <div class="mt">${variasU?`<span class="uni-tag">${esc(nombreUnidad(p.codigoUnidad))}</span> · `:''}${esc(p.cargo||'sin cargo')}${detalleTxt(p)?' · '+esc(detalleTxt(p).slice(2,-1)):''}</div>
-        </div>
-        <div class="sp"></div>
-        <span class="sit-badge ${dis?'':'x'}">${esc(p.situacion||'—')}</span>
-        ${p.puedeGestionar?`<div class="acts"><button class="btn btn-sm" onclick="abrirSituacion('${p.id}')">Situación</button><button class="btn btn-sm" onclick="abrirEditarPersona('${p.id}')">Editar</button>${S.rol==='admin'?`<button class="ic-btn danger" onclick="borrarPersona('${p.id}')">✕</button>`:''}</div>`:''}
-      </div>`;
+      return '<div class="prow"><div><div class="nm">'+esc(grado+p.nombre)+'</div><div class="mt">'+(variasU?'<span class="uni-tag">'+esc(nombreUnidad(p.codigoUnidad))+'</span> · ':'')+esc(p.cargo||'sin cargo')+(detalleTxt(p)?' · '+esc(detalleTxt(p).slice(2,-1)):'')+'</div></div><div class="sp"></div><span class="sit-badge '+(dis?'':'x')+'">'+esc(p.situacion||'—')+'</span>'+(p.puedeGestionar?'<div class="acts"><button class="btn btn-sm" onclick="abrirSituacion(\''+p.id+'\')">Situación</button><button class="btn btn-sm" onclick="abrirEditarPersona(\''+p.id+'\')">Editar</button>'+(S.rol==='admin'?'<button class="ic-btn danger" onclick="borrarPersona(\''+p.id+'\')">✕</button>':'')+'</div>':'')+'</div>';
     }).join('');
   });
   cont.innerHTML=html;
 }
 document.getElementById('bus').addEventListener('input',pintarPersonal);
 
-function optList(arr,sel){return '<option value="">—</option>'+(arr||[]).map(v=>`<option ${v===sel?'selected':''}>${esc(v)}</option>`).join('');}
-function gradosDe(cat){const t='grado_'+String(cat||'').toLowerCase();return CAT[t]||[];}
+function optList(arr,sel){return '<option value="">—</option>'+(arr||[]).map(v=>'<option '+(v===sel?'selected':'')+'>'+esc(v)+'</option>').join('');}
+function gradosDe(cat){return CAT[tipoGrado(cat)]||[];}
 function onCatChange(){const cat=document.getElementById('p-cat').value;document.getElementById('p-grado').innerHTML=optList(gradosDe(cat));}
 function unidadesGestionables(){return UNIS.filter(u=>puedeGestionarUnidad(u.codigo)).sort((a,b)=>a.codigo.localeCompare(b.codigo,undefined,{numeric:true}));}
 function cargosDeUnidad(cod){return (CARGOS[cod]||[]).map(c=>c.cargo);}
@@ -600,14 +611,13 @@ function refrescarCargo(cod){
   ssInit('p-cargo',ops,'','— sin cargo —');
   document.getElementById('cargo-hint').textContent=lista.length?'':'Esta unidad no tiene cargos definidos (opcional).';
 }
-
 function abrirNuevaPersona(){
   persEdit=null;document.getElementById('pers-title').textContent='Nueva persona';
   const us=unidadesGestionables();
   if(!us.length){toast('No tienes unidades que puedas gestionar.','err');return;}
   ssInit('p-unidad',us.map(u=>({value:u.codigo,label:u.nombre,sub:u.codigo})),us[0].codigo,'Seleccionar unidad…');
   ssOnChange('p-unidad',cod=>refrescarCargo(cod));
-  document.getElementById('p-cat').innerHTML='<option value="">—</option>'+CATEGORIAS.map(c=>`<option>${esc(c)}</option>`).join('');
+  document.getElementById('p-cat').innerHTML='<option value="">—</option>'+CATEGORIAS.map(c=>'<option>'+esc(c)+'</option>').join('');
   document.getElementById('p-cat').value='';
   document.getElementById('p-grado').innerHTML=optList([]);
   document.getElementById('p-arma').innerHTML=optList(CAT.arma);
@@ -622,7 +632,7 @@ function abrirEditarPersona(id){
   const us=unidadesGestionables();
   ssInit('p-unidad',us.map(u=>({value:u.codigo,label:u.nombre,sub:u.codigo})),p.codigoUnidad,'Seleccionar unidad…');
   ssOnChange('p-unidad',cod=>refrescarCargo(cod));
-  document.getElementById('p-cat').innerHTML='<option value="">—</option>'+CATEGORIAS.map(c=>`<option ${c===p.categoria?'selected':''}>${esc(c)}</option>`).join('');
+  document.getElementById('p-cat').innerHTML='<option value="">—</option>'+CATEGORIAS.map(c=>'<option '+(c===p.categoria?'selected':'')+'>'+esc(c)+'</option>').join('');
   document.getElementById('p-grado').innerHTML=optList(gradosDe(p.categoria),p.grado);
   document.getElementById('p-arma').innerHTML=optList(CAT.arma,p.arma);
   document.getElementById('p-sit').innerHTML=optList(CAT.situacion,p.situacion);
@@ -646,7 +656,6 @@ document.getElementById('pers-save').addEventListener('click',async function(){
     toast(persEdit?'Actualizado.':'Persona agregada.','ok');cerrar('ov-pers');await cargar();
   }catch(e){toast(e.message,'err');}finally{this.disabled=false;}
 });
-
 function abrirSituacion(id){
   const p=PERS.find(x=>x.id===id);if(!p)return;sitId=id;
   document.getElementById('sit-quien').textContent=(p.grado?p.grado+' ':'')+p.nombre;
@@ -672,18 +681,8 @@ async function borrarPersona(id){
   }catch(e){toast(e.message,'err');}
 }
 
-/* ENCABEZADO */
-function abrirEncabezado(){document.getElementById('enc-txt').value=CONFIG.saludo||'';abrir('ov-enc');}
-document.getElementById('enc-save').addEventListener('click',async function(){
-  const valor=document.getElementById('enc-txt').value.trim();
-  this.disabled=true;
-  try{const r=await api({action:'config_set',token:S.token,clave:'saludo',valor},'POST');if(!r.ok)throw new Error(r.error);
-    CONFIG.saludo=valor;toast('Encabezado guardado.','ok');cerrar('ov-enc');armarParte();
-  }catch(e){toast(e.message,'err');}finally{this.disabled=false;}
-});
-
 /* ── CATÁLOGOS ── */
-const CAT_DEFS=[['grado_oficiales','Grados — Oficiales'],['grado_suboficiales','Grados — Suboficiales'],['grado_tropa','Grados — Tropa'],['grado_auxiliares','Grados — Auxiliares'],['situacion','Situaciones'],['arma','Armas']];
+const CAT_DEFS=[['grado_oficiales','Grados — Oficiales'],['grado_suboficiales','Grados — Suboficiales'],['grado_tropa','Grados — Tropa'],['grado_auxiliares','Grados — Auxiliares'],['grado_cadetes','Grados — Cadetes'],['grado_estudiantes_tecnicos','Grados — Estudiantes Técnicos'],['situacion','Situaciones'],['arma','Armas']];
 let catCtx={tipo:null,valor:null};
 function pintarCatalogos(){
   document.getElementById('cat-cont').innerHTML=CAT_DEFS.map(d=>{
@@ -691,16 +690,14 @@ function pintarCatalogos(){
     const esGrado=t.indexOf('grado_')===0;
     const ord=(GRADOORD&&GRADOORD[t])||{};
     const filas=items.length?items.map(v=>{
-      const badge=esGrado?`<span class="pill slate" style="margin-right:4px">#${ord[v]||'?'}</span>`:'';
-      return `<div class="cat-item">${badge}<span>${esc(v)}</span><div class="acts"><button class="ic-btn" title="Editar" onclick="catEdit('${t}','${esc(v)}')">✎</button><button class="ic-btn danger" title="Quitar" onclick="catDel('${t}','${esc(v)}')">✕</button></div></div>`;
+      const badge=esGrado?'<span class="pill slate" style="margin-right:4px">#'+(ord[v]||'?')+'</span>':'';
+      return '<div class="cat-item">'+badge+'<span>'+esc(v)+'</span><div class="acts"><button class="ic-btn" title="Editar" onclick="catEdit(\''+t+'\',\''+esc(v)+'\')">✎</button><button class="ic-btn danger" title="Quitar" onclick="catDel(\''+t+'\',\''+esc(v)+'\')">✕</button></div></div>';
     }).join(''):'<div class="empty" style="padding:18px">Sin valores aún.</div>';
     const addRow=esGrado
-      ? `<div class="toolbar" style="margin-bottom:12px;gap:6px"><input id="catnew-${t}" placeholder="Grado…" style="flex:1;min-width:0" class="inp"><input id="catord-${t}" type="number" min="1" placeholder="Jerarquía" style="width:92px" class="inp" onkeydown="if(event.key==='Enter')catAdd('${t}')"><button class="btn btn-primary" onclick="catAdd('${t}')">+</button></div>`
-      : `<div class="toolbar" style="margin-bottom:12px"><input id="catnew-${t}" placeholder="Agregar…" style="flex:1" class="inp" onkeydown="if(event.key==='Enter')catAdd('${t}')"><button class="btn btn-primary" onclick="catAdd('${t}')">+</button></div>`;
-    const ayuda=esGrado?'<div style="font-size:.74rem;color:var(--text-soft);margin-bottom:8px">Jerarquía: 1 = mayor grado. No se puede repetir.</div>':'';
-    return `<div class="panel"><div class="panel-h"><h3>${lbl}</h3><span style="margin-left:auto;color:var(--text-soft);font-size:.8rem">${items.length}</span></div><div class="panel-b">
-      ${ayuda}${addRow}
-      <div class="cat-list">${filas}</div></div></div>`;
+      ? '<div class="toolbar" style="margin-bottom:12px;gap:6px"><input id="catnew-'+t+'" placeholder="Grado…" style="flex:1;min-width:0" class="inp"><input id="catord-'+t+'" type="number" min="1" placeholder="Antig." style="width:84px" class="inp" onkeydown="if(event.key===\'Enter\')catAdd(\''+t+'\')"><button class="btn btn-primary" onclick="catAdd(\''+t+'\')">+</button></div>'
+      : '<div class="toolbar" style="margin-bottom:12px"><input id="catnew-'+t+'" placeholder="Agregar…" style="flex:1" class="inp" onkeydown="if(event.key===\'Enter\')catAdd(\''+t+'\')"><button class="btn btn-primary" onclick="catAdd(\''+t+'\')">+</button></div>';
+    const ayuda=esGrado?'<div style="font-size:.74rem;color:var(--text-soft);margin-bottom:8px">Antigüedad: 1 = mayor grado. No se puede repetir.</div>':'';
+    return '<div class="panel"><div class="panel-h"><h3>'+lbl+'</h3><span style="margin-left:auto;color:var(--text-soft);font-size:.8rem">'+items.length+'</span></div><div class="panel-b">'+ayuda+addRow+'<div class="cat-list">'+filas+'</div></div></div>';
   }).join('');
 }
 async function catAdd(tipo){
@@ -709,7 +706,7 @@ async function catAdd(tipo){
   const params={action:'cat_crear',token:S.token,tipo,valor};
   if(tipo.indexOf('grado_')===0){
     const o=document.getElementById('catord-'+tipo); const orden=parseInt(o.value,10);
-    if(!orden||orden<1){toast('Indica la jerarquía (1 = mayor grado).','err');return;}
+    if(!orden||orden<1){toast('Indica la antigüedad (1 = mayor grado).','err');return;}
     params.orden=orden;
   }
   try{const r=await api(params,'POST');if(!r.ok)throw new Error(r.error);
@@ -731,7 +728,7 @@ document.getElementById('cat-save').addEventListener('click',async function(){
   const params={action:'cat_editar',token:S.token,tipo:catCtx.tipo,valor:catCtx.valor,nuevo};
   if(catCtx.tipo.indexOf('grado_')===0){
     const orden=parseInt(document.getElementById('cat-orden').value,10);
-    if(!orden||orden<1){toast('Indica la jerarquía (1 = mayor grado).','err');return;}
+    if(!orden||orden<1){toast('Indica la antigüedad (1 = mayor grado).','err');return;}
     params.orden=orden;
   }
   this.disabled=true;
@@ -745,7 +742,7 @@ async function catDel(tipo,valor){
   try{const r=await api({action:'cat_borrar',token:S.token,tipo,valor},'POST');if(!r.ok)throw new Error(r.error);toast('Quitado.','ok');await recargar();}
   catch(e){toast(e.message,'err');}
 }
-async function recargar(){try{const res=await api({action:'parte',token:S.token});PERS=res.personal||[];CAT=res.catalogos||{};GRADOORD=res.gradoOrden||{};CARGOS=res.cargos||{};UNIS=res.unidades||[];CONFIG=res.config||{};YO=res.yo||{};if(res.categorias)CATEGORIAS=res.categorias;pintarCatalogos();pintarPersonal();armarParte();}catch(e){}}
+async function recargar(){try{const res=await api({action:'parte',token:S.token});PERS=res.personal||[];CAT=res.catalogos||{};GRADOORD=res.gradoOrden||{};CARGOS=res.cargos||{};UNIS=res.unidades||[];CONFIG=res.config||{};YO=res.yo||{};if(res.categorias)CATEGORIAS=res.categorias;pintarCatalogos();pintarPersonal();refrescarParteVista();}catch(e){}}
 
 /* MODALES */
 const ICO_INFO='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 8h.01M11 12h1v4h1"/></svg>';
@@ -763,7 +760,6 @@ function confirmar(opt){opt=opt||{};return new Promise(res=>{
 function abrir(id){document.getElementById(id).classList.add('show');}
 function cerrar(id){document.getElementById(id).classList.remove('show');}
 document.querySelectorAll('.overlay').forEach(o=>o.addEventListener('click',e=>{if(e.target===o)o.classList.remove('show');}));
-document.getElementById('parte-fecha').addEventListener('change',armarParte);
 document.getElementById('l-btn').addEventListener('click',entrar);
 document.getElementById('l-pass').addEventListener('keydown',e=>{if(e.key==='Enter')entrar();});
 document.getElementById('btn-logout').addEventListener('click',()=>{confirmar({titulo:'Cerrar sesión',msg:'¿Salir del sistema?',ok:'Cerrar sesión'}).then(s=>{if(s)cerrarSesion(false);});});
